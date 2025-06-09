@@ -30,9 +30,7 @@ class MobileAudioController {
             currentTrack: document.getElementById('current-track-mobile'),
             speedControl: document.getElementById('speed-control-mobile')
         };
-    }
-
-    setupEventListeners() {
+    }    setupEventListeners() {
         // Sync mobile play/pause button with desktop
         this.mobileElements.playPauseBtn?.addEventListener('click', () => {
             this.desktopElements.playPauseBtn?.click();
@@ -45,6 +43,9 @@ class MobileAudioController {
                 this.desktopElements.speedControl.dispatchEvent(new Event('change'));
             }
         });
+
+        // Add timeline seeking functionality
+        this.setupTimelineSeeking();
 
         // Create a mutation observer to watch for changes in desktop elements
         this.setupDesktopWatcher();
@@ -139,6 +140,62 @@ class MobileAudioController {
     syncSpeedControl() {
         if (this.desktopElements.speedControl && this.mobileElements.speedControl) {
             this.mobileElements.speedControl.value = this.desktopElements.speedControl.value;
+        }
+    }    setupTimelineSeeking() {
+        // Add click handlers to both desktop and mobile progress bar containers
+        const desktopProgressContainer = this.desktopElements.progressBar?.parentElement;
+        const mobileProgressContainer = this.mobileElements.progressBar?.parentElement;
+
+        if (desktopProgressContainer) {
+            this.addProgressBarClickHandler(desktopProgressContainer);
+        }
+
+        if (mobileProgressContainer) {
+            this.addProgressBarClickHandler(mobileProgressContainer);
+        }
+    }
+
+    addProgressBarClickHandler(progressContainer) {
+        // Add cursor pointer style
+        progressContainer.style.cursor = 'pointer';
+        
+        // Handle both mouse and touch events
+        progressContainer.addEventListener('click', (e) => this.handleProgressBarClick(e, progressContainer));
+        progressContainer.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.handleProgressBarClick(e.changedTouches[0], progressContainer);
+        });
+    }    handleProgressBarClick(event, progressContainer) {
+        // Get the audio element from the global scope (exposed by scenarios.js)
+        const audio = window.currentAudio;
+        if (!audio || !audio.duration) {
+            return;
+        }
+
+        // Calculate click position relative to the progress bar
+        const rect = progressContainer.getBoundingClientRect();
+        const clickX = event.clientX - rect.left;
+        const progressBarWidth = rect.width;
+        
+        // Calculate the percentage and seek time
+        const percentage = Math.max(0, Math.min(1, clickX / progressBarWidth));
+        const seekTime = percentage * audio.duration;
+
+        // Seek to the calculated time
+        audio.currentTime = seekTime;
+
+        // Update progress bars immediately to provide visual feedback
+        const progressPercent = (seekTime / audio.duration) * 100;
+        this.updateProgressBars(progressPercent);
+    }updateProgressBars(percentage) {
+        const progressStyle = `${percentage}%`;
+        
+        if (this.desktopElements.progressBar) {
+            this.desktopElements.progressBar.style.width = progressStyle;
+        }
+        
+        if (this.mobileElements.progressBar) {
+            this.mobileElements.progressBar.style.width = progressStyle;
         }
     }
 

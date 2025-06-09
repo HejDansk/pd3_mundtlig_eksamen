@@ -672,6 +672,8 @@ const scenarios = [
 // Global audio player
 let currentAudio = null;
 let currentTrackInfo = '';
+// Expose currentAudio globally for mobile audio controller
+window.currentAudio = null;
 const audioPlayer = document.getElementById('audio-player');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const playIcon = document.getElementById('play-icon');
@@ -695,8 +697,8 @@ function playAudio(audioFile, trackInfo = '') {
         currentAudio.pause();
         currentAudio.currentTime = 0;
     }
-    
-    currentAudio = new Audio(audioFile);
+      currentAudio = new Audio(audioFile);
+    window.currentAudio = currentAudio; // Keep global reference in sync
     currentTrackInfo = trackInfo || audioFile.split('/').pop().replace('.mp3', '');
     
     // Set initial playback rate

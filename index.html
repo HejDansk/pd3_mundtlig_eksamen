@@ -77,9 +77,22 @@
             border-top: 2px solid #e2e8f0;
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         }
-        
-        #progress-bar {
+          #progress-bar {
             transition: width 0.1s ease;
+        }
+
+        /* Interactive progress bar styles */
+        .progress-container {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .progress-container:hover {
+            transform: scaleY(1.5);
+        }
+
+        .progress-container:hover .progress-bar {
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
         }
         
         #play-pause-btn:hover {
@@ -137,11 +150,10 @@
                             <svg id="pause-icon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                             </svg>
-                        </button>
-                        <div class="flex items-center space-x-2">
+                        </button>                        <div class="flex items-center space-x-2">
                             <span class="text-xs text-slate-500" id="current-time">0:00</span>
-                            <div class="w-32 bg-slate-200 rounded-full h-1">
-                                <div id="progress-bar" class="bg-blue-600 h-1 rounded-full" style="width: 0%"></div>
+                            <div class="w-32 bg-slate-200 rounded-full h-1 progress-container">
+                                <div id="progress-bar" class="bg-blue-600 h-1 rounded-full progress-bar" style="width: 0%"></div>
                             </div>
                             <span class="text-xs text-slate-500" id="duration">0:00</span>
                         </div>
@@ -189,12 +201,11 @@
                             </select>
                         </div>
                     </div>
-                    
-                    <!-- Second row: Progress bar with times -->
+                      <!-- Second row: Progress bar with times -->
                     <div class="flex items-center space-x-2">
                         <span class="text-xs text-slate-500 flex-shrink-0" id="current-time-mobile">0:00</span>
-                        <div class="flex-1 bg-slate-200 rounded-full h-1">
-                            <div id="progress-bar-mobile" class="bg-blue-600 h-1 rounded-full" style="width: 0%"></div>
+                        <div class="flex-1 bg-slate-200 rounded-full h-1 progress-container">
+                            <div id="progress-bar-mobile" class="bg-blue-600 h-1 rounded-full progress-bar" style="width: 0%"></div>
                         </div>
                         <span class="text-xs text-slate-500 flex-shrink-0" id="duration-mobile">0:00</span>
                     </div>
