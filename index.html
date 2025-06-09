@@ -85,11 +85,30 @@
         #play-pause-btn:hover {
             background: #1d4ed8;
         }
-        
-        #speed-control:focus {
+          #speed-control:focus {
             outline: none;
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Mobile-specific audio player styles */
+        #speed-control-mobile:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Ensure mobile layout doesn't overflow */
+        @media (max-width: 640px) {
+            #audio-player {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+            
+            .container {
+                padding-left: 0;
+                padding-right: 0;
+            }
         }
     </style>
 </head>
@@ -106,9 +125,10 @@
         <main id="scenario-container">
             <!-- Current scenario will be dynamically inserted here -->
         </main>        <!-- Audio Player Controls -->
-        <div id="audio-player" class="hidden flex-shrink-0 bg-white border-t border-slate-200 px-4 py-3">
+        <div id="audio-player" class="hidden flex-shrink-0 bg-white border-t border-slate-200 px-2 sm:px-4 py-3">
             <div class="container mx-auto">
-                <div class="flex items-center justify-between">
+                <!-- Desktop Layout -->
+                <div class="hidden sm:flex items-center justify-between">
                     <div class="flex items-center space-x-3">
                         <button id="play-pause-btn" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition-colors">
                             <svg id="play-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -126,7 +146,8 @@
                             <span class="text-xs text-slate-500" id="duration">0:00</span>
                         </div>
                         <div class="text-xs text-slate-600" id="current-track">No audio loaded</div>
-                    </div>                    <div class="flex items-center space-x-2">
+                    </div>
+                    <div class="flex items-center space-x-2">
                         <span class="text-xs text-slate-500">Hastighed:</span>
                         <select id="speed-control" class="text-xs border border-slate-300 rounded px-2 py-1">
                             <option value="0.25">0.25x</option>
@@ -139,6 +160,45 @@
                         </select>
                     </div>
                 </div>
+                
+                <!-- Mobile Layout -->
+                <div class="sm:hidden space-y-3">
+                    <!-- First row: Play button and track info -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <button id="play-pause-btn-mobile" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition-colors">
+                                <svg id="play-icon-mobile" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                                </svg>
+                                <svg id="pause-icon-mobile" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                            <div class="text-xs text-slate-600 truncate flex-1" id="current-track-mobile">No audio loaded</div>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-xs text-slate-500">Hastighed:</span>
+                            <select id="speed-control-mobile" class="text-xs border border-slate-300 rounded px-1 py-1">
+                                <option value="0.25">0.25x</option>
+                                <option value="0.5">0.5x</option>
+                                <option value="0.75">0.75x</option>
+                                <option value="0.9">0.9x</option>
+                                <option value="1" selected>1x</option>
+                                <option value="1.5">1.5x</option>
+                                <option value="2">2x</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Second row: Progress bar with times -->
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-slate-500 flex-shrink-0" id="current-time-mobile">0:00</span>
+                        <div class="flex-1 bg-slate-200 rounded-full h-1">
+                            <div id="progress-bar-mobile" class="bg-blue-600 h-1 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <span class="text-xs text-slate-500 flex-shrink-0" id="duration-mobile">0:00</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -149,8 +209,7 @@
                 <button id="next-btn" class="nav-btn bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors">Næste</button>
             </div>
         </footer>
-    </div>
-
-    <script src="scenarios.js"></script>
+    </div>    <script src="scenarios.js"></script>
+    <script src="mobile-audio.js"></script>
 </body>
 </html>
